@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace ResourceGuru
 {
@@ -24,6 +25,12 @@ namespace ResourceGuru
             ApiUrl = "https://api.resourceguruapp.com/";
             requestHelper = new RequestHelper(this.OAuthInfo);
             
+        }
+
+        public string GetAuthorizeUrl(string redirectUri)
+        {
+            string authorizeUrl = "https://api.resourceguruapp.com/oauth/authorize?response_type=code&client_id={0}&redirect_uri={1}";
+            return String.Format(authorizeUrl, this.ClientId, HttpUtility.UrlEncode(redirectUri));
         }
 
         public OAuthInfo AuthenticateWithAuthorizationCode(string authorizationCode, string redirectUri)

@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using PodioAPI.Models;
 using ResourceGuru.Authentication;
+using ResourceGuruAPI.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -47,7 +48,7 @@ namespace ResourceGuru.Utils
             var data = new List<string>();
             string httpMethod = string.Empty;
             string originalUrl = url;
-
+            url = "https://api.resourceguruapp.com/" + url;
             //To use url other than api.podio.com, ex file download from files.podio.com
             if (options != null && options.ContainsKey("url"))
             {
@@ -150,7 +151,7 @@ namespace ResourceGuru.Utils
             {
                 using (WebResponse response = request.GetResponse())
                 {
-                    podioResponse.Status = (int)((HttpWebResponse)response).StatusCode;
+                    apiResponse.Status = (int)((HttpWebResponse)response).StatusCode;
                     foreach (string key in response.Headers.AllKeys)
                     {
                         responseHeaders.Add(key, response.Headers.Get(key));
@@ -158,16 +159,16 @@ namespace ResourceGuru.Utils
                    
                     using (StreamReader sr = new StreamReader(response.GetResponseStream()))
                     {
-                        podioResponse.Body = sr.ReadToEnd();
+                        apiResponse.Body = sr.ReadToEnd();
                     }
-                    podioResponse.Headers = responseHeaders;
+                    apiResponse.Headers = responseHeaders;
                 }
             }
             catch (WebException e)
             {
                 using (WebResponse response = e.Response)
                 {
-                    podioResponse.Status = (int)((HttpWebResponse)response).StatusCode;
+                    apiResponse.Status = (int)((HttpWebResponse)response).StatusCode;
                     foreach (string key in response.Headers.AllKeys)
                     {
                         responseHeaders.Add(key, response.Headers.Get(key));
@@ -175,44 +176,44 @@ namespace ResourceGuru.Utils
 
                     using (StreamReader sr = new StreamReader(response.GetResponseStream()))
                     {
-                        podioResponse.Body = sr.ReadToEnd();
+                        apiResponse.Body = sr.ReadToEnd();
                     }
-                    podioResponse.Headers = responseHeaders;
+                    apiResponse.Headers = responseHeaders;
                 }
             }
 
 
-            //if (podioResponse.Headers.ContainsKey("Retry-After"))
-             //   RateLimitRemaining = int.Parse(podioResponse.Headers["Retry-After"]);
+            //if (apiResponse.Headers.ContainsKey("Retry-After"))
+             //   RateLimitRemaining = int.Parse(apiResponse.Headers["Retry-After"]);
            
 
 
-            switch (podioResponse.Status)
+            switch (apiResponse.Status)
             {
                 case 200:
                 case 201:
-                    responseObject = JSONSerializer.Deserilaize<T>(podioResponse.Body);
+                    responseObject = JsonConvert.DeserializeObject<T>(apiResponse.Body);
                     break;
                 case 204:
                     responseObject = default(T);
                     break;
                 case 401:
-                    throw new PodioAuthorizationException(podioResponse.Status, "Unauthorized");
+                    throw new ResourceGuruException(apiResponse.Status, "Unauthorized");
                     break;
                 case 403:
-                    throw new PodioForbiddenException(podioResponse.Status, "Forbidden");
+                    throw new ResourceGuruException(apiResponse.Status, "Forbidden");
                 case 404:
-                    throw new PodioNotFoundException(podioResponse.Status, "Not Found");
+                    throw new ResourceGuruException(apiResponse.Status, "Not Found");
                 case 422:
-                    throw new UnprocessableEntityException(podioResponse.Status, "Unprocessable Entity");
+                    throw new ResourceGuruException(apiResponse.Status, "Unprocessable Entity");
                 case 500:
-                    throw new PodioServerException(podioResponse.Status, podioError);
+                    throw new ResourceGuruException(apiResponse.Status, "Resource Guru is having trouble");
                 case 502:
                 case 503:
                 case 504:
-                    throw new PodioUnavailableException(podioResponse.Status, "Resource Guru is having trouble");
+                    throw new ResourceGuruException(apiResponse.Status, "Resource Guru is having trouble");
                 default:
-                    throw new PodioException(podioResponse.Status, "Uncategorized Error");
+                    throw new ResourceGuruException(apiResponse.Status, "Uncategorized Error");
             }
 
             return responseObject;
