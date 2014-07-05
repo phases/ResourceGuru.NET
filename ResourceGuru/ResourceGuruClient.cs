@@ -16,7 +16,7 @@ namespace ResourceGuru
         protected string ApiUrl { get; set; }
         protected OAuthInfo OAuthInfo { get; set; }
 
-        protected RequestHelper requestHelper;
+        public RequestHelper requestHelper;
 
         public ResourceGuruClient(string clientId, string clientSecret)
         {
@@ -76,5 +76,7 @@ namespace ResourceGuru
 
             return OAuthInfo;
         }
+
+
     }
 }
