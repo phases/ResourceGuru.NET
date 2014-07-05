@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 
-namespace ResourceGuruAPI.Exceptions
+namespace ResourceGuru.Exceptions
 {
     public class ResourceGuruException : Exception
     {
