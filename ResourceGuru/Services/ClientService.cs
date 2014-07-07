@@ -32,5 +32,37 @@ namespace ResourceGuru.Services
             string url = string.Format("/v1/{0}/clients/{1}", subdomain, clientId);
             return _client.requestHelper.Get<ClientDetail>(url);
         }
+
+        public Client AddNewClient(string subdomain, string color, string name, string notes)
+        {
+            string url = string.Format("/v1/{0}/clients", subdomain);
+            var requestData = new
+            {
+                color = color,
+                name = name,
+                notes = notes
+            };
+
+            return _client.requestHelper.Post<Client>(url, requestData);
+        }
+
+        public Client UpdateClient(string subdomain, int clientId, string color, string name, string notes)
+        {
+            string url = string.Format("/v1/{0}/clients/{1}", subdomain, clientId);
+            var requestData = new
+            {
+                color = color,
+                name = name,
+                notes = notes
+            };
+
+            return _client.requestHelper.Put<Client>(url, requestData);
+        }
+
+        public void DeleteClient(string subdomain, int clientId)
+        {
+            string url = string.Format("/v1/{0}/clients/{1}", subdomain, clientId);
+            _client.requestHelper.Delete<dynamic>(url);
+        }
     }
 }

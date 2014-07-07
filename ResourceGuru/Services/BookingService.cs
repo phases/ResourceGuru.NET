@@ -61,10 +61,10 @@ namespace ResourceGuru.Services
             return _client.requestHelper.Put<Booking>(url, createBookingRequest);
         }
 
-        public Booking DeleteBooking(string subdomain, int bookingId)
+        public void DeleteBooking(string subdomain, int bookingId)
         {
             string url = string.Format("/v1/{0}/bookings/{1}", subdomain, bookingId);
-            return _client.requestHelper.Delete<dynamic>(url);
+            _client.requestHelper.Delete<dynamic>(url);
         }
     }
 }

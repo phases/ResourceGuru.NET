@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 namespace ResourceGuru.Models
 {
-    class Booking
+    public class Booking
     {
         [JsonProperty("id")]
         public int Id { get; set; }
@@ -46,10 +46,10 @@ namespace ResourceGuru.Models
         public Booker Booker { get; set; }
 
         [JsonProperty("durations")]
-        public List<Duration> Durations { get; set; }
+        public List<BookingDuration> Durations { get; set; }
     }
 
-    internal class Booker
+    public class Booker
     {
 
         [JsonProperty("id")]
@@ -65,7 +65,7 @@ namespace ResourceGuru.Models
         public string Name { get; set; }
     }
 
-    internal class Duration
+    public class BookingDuration
     {
 
         [JsonProperty("date")]

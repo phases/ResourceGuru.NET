@@ -2,7 +2,7 @@
 
 namespace ResourceGuru.Models
 {
-    class ClientDetail
+    public class ClientDetail
     {
         [JsonProperty("id")]
         public int Id { get; set; }

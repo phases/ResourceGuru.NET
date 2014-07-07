@@ -3,7 +3,7 @@ using System;
 
 namespace ResourceGuru.Models
 {
-    class BookingRequest
+    public class BookingRequest
     {
         [JsonProperty("start_date")]
         public DateTime StartDate { get; set; }
