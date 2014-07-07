@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using PodioAPI.Models;
 using ResourceGuru.Authentication;
+using ResourceGuru.Exceptions;
 using ResourceGuruAPI.Exceptions;
 using System;
 using System.Collections.Generic;
