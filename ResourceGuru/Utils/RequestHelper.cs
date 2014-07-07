@@ -2,7 +2,6 @@
 using PodioAPI.Models;
 using ResourceGuru.Authentication;
 using ResourceGuru.Exceptions;
-using ResourceGuruAPI.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -199,22 +198,20 @@ namespace ResourceGuru.Utils
                     responseObject = default(T);
                     break;
                 case 401:
-                    throw new ResourceGuruException(apiResponse.Status, "Unauthorized");
-                    break;
+                    throw new ResourceGuruException(apiResponse.Status, "Unauthorized", apiResponse.Body);
                 case 403:
-                    throw new ResourceGuruException(apiResponse.Status, "Forbidden");
+                    throw new ResourceGuruException(apiResponse.Status, "Forbidden", apiResponse.Body);
                 case 404:
-                    throw new ResourceGuruException(apiResponse.Status, "Not Found");
+                    throw new ResourceGuruException(apiResponse.Status, "Not Found", apiResponse.Body);
                 case 422:
-                    throw new ResourceGuruException(apiResponse.Status, "Unprocessable Entity");
+                    throw new ResourceGuruException(apiResponse.Status, "Unprocessable Entity", apiResponse.Body);
                 case 500:
-                    throw new ResourceGuruException(apiResponse.Status, "Resource Guru is having trouble");
                 case 502:
                 case 503:
                 case 504:
-                    throw new ResourceGuruException(apiResponse.Status, "Resource Guru is having trouble");
+                    throw new ResourceGuruException(apiResponse.Status, "Resource Guru is having trouble", apiResponse.Body);
                 default:
-                    throw new ResourceGuruException(apiResponse.Status, "Uncategorized Error");
+                    throw new ResourceGuruException(apiResponse.Status, "Uncategorized Error", apiResponse.Body);
             }
 
             return responseObject;
@@ -254,9 +251,16 @@ namespace ResourceGuru.Utils
                     using (var streamWriter = new StreamWriter(request.GetRequestStream()))
                     {
                         if (obj is string)
+                        {
                             streamWriter.Write(obj);
+                        }
                         else
-                            streamWriter.Write(JsonConvert.SerializeObject(obj));
+                        {
+                            var settings = new JsonSerializerSettings();
+                            settings.NullValueHandling = NullValueHandling.Ignore;
+
+                            streamWriter.Write(JsonConvert.SerializeObject(obj, settings));
+                        }
                     }
                 }
                 catch (Exception ex)

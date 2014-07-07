@@ -10,9 +10,12 @@ namespace ResourceGuru.Exceptions
         /// </summary>
         public int Status { get; internal set; }
         public string Error { get; set; }
-        public ResourceGuruException(int status, string error)
+        public string ResponseBody { get; set; }
+        public ResourceGuruException(int status, string error, string responseBody)
         {
             this.Status = status;
+            this.Error = error;
+            this.ResponseBody = responseBody;
         }
     }
 }

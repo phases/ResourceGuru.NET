@@ -18,13 +18,13 @@ namespace ResourceGuru.Models
         public int ResourceId { get; set; }
 
         [JsonProperty("allow_waiting")]
-        public bool AllowWaiting { get; set; }
+        public bool? AllowWaiting { get; set; }
 
         [JsonProperty("project_id")]
-        public int ProjectId { get; set; }
+        public int? ProjectId { get; set; }
 
         [JsonProperty("client_id")]
-        public int ClientId { get; set; }
+        public int? ClientId { get; set; }
 
         [JsonProperty("details")]
         public string Details { get; set; }

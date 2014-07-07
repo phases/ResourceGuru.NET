@@ -36,5 +36,29 @@ namespace ResourceGuru.Services
             string url = string.Format("/v1/{0}/projects/{1}/bookings", subdomain, projectId);
             return _client.requestHelper.Get<List<Booking>>(url);
         }
+
+        public List<Booking> GetBookingsForClient(string subdomain, int clientId)
+        {
+            string url = string.Format("/v1/{0}/clients/{1}/bookings", subdomain, clientId);
+            return _client.requestHelper.Get<List<Booking>>(url);
+        }
+
+        public List<Booking> GetBookingsForResource(string subdomain, int resourceId)
+        {
+            string url = string.Format("/v1/{0}/resources/{1}/bookings", subdomain, resourceId);
+            return _client.requestHelper.Get<List<Booking>>(url);
+        }
+
+        public Booking AddNewBooking(string subdomain, BookingRequest createBookingRequest)
+        {
+            string url = string.Format("/v1/{0}/bookings", subdomain);
+            return _client.requestHelper.Post<Booking>(url, createBookingRequest);
+        }
+
+        public Booking UpdateBooking(string subdomain, int bookingId, BookingRequest createBookingRequest)
+        {
+            string url = string.Format("/v1/{0}/bookings/{1}", subdomain, bookingId);
+            return _client.requestHelper.Put<Booking>(url, createBookingRequest);
+        }
     }
 }

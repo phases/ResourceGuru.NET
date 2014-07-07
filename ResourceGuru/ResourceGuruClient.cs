@@ -76,7 +76,5 @@ namespace ResourceGuru
 
             return OAuthInfo;
         }
-
-
     }
 }
