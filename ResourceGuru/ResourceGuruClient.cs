@@ -1,4 +1,5 @@
 ﻿using ResourceGuru.Authentication;
+using ResourceGuru.Services;
 using ResourceGuru.Utils;
 using System;
 using System.Collections.Generic;
@@ -76,5 +77,22 @@ namespace ResourceGuru
 
             return OAuthInfo;
         }
+
+        #region Services
+        public AccountService AccountService
+        {
+            get { return new AccountService(this); }
+        }
+
+        public BookingService BookingService
+        {
+            get { return new BookingService(this); }
+        }
+
+        public ClientService ClientService
+        {
+            get { return new ClientService(this); }
+        }
+        #endregion
     }
 }

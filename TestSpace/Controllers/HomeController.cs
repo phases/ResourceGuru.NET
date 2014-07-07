@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using ResourceGuru;
+using ResourceGuru.Models;
 
 namespace TestSpace.Controllers
 {
@@ -16,6 +17,10 @@ namespace TestSpace.Controllers
            // Response.Redirect(redirectUri);
 
             client.AuthenticateWithAuthorizationCode("a43163c09bfbefca6169e9757a71d049be99f4ee23e1d978e5a0a718643d8516","https://localhost");
+
+            List<Booking> bookings = client.BookingService.GetBookings(subdomain: "my-org");
+            ClientDetail clientDetails = client.ClientService.GetClient(subdomain: "my-org", clientId: 123);
+            string clientName = clientDetails.Name;
             return View();
         }
 
