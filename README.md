@@ -21,7 +21,7 @@ The client supports two ways of authentication:
 ResourceGuru offer OAuth2 as the standard way to authenticate with our API as this offers a simple flow for users to allow app access without you having to store their credentials.
 
 ```csharp
-// Redirect the user to the authorize url, You can get the authorize url by calling 'GetAuthorizeUrl' method in podio class.
+// Redirect the user to the authorize url, You can get the authorize url by calling 'GetAuthorizeUrl' method in ResourceGuruClient class.
 string authUrl = client.GetAuthorizeUrl(redirectUri);
 
 // In the callback you get the authorization_code as a query string parameter
@@ -62,7 +62,7 @@ try
 {
     List<Booking> bookings = client.BookingService.GetBookingsForClient(subdomain: "my-org", clientId: 123);
 }
-catch (PodioException exception)
+catch (ResourceGuruException exception)
 {
     Response.Write(exception.ResponseBody); // JSON Response body.
 }
