@@ -16,16 +16,15 @@ namespace ResourceGuru
         protected string ClientSecret { get; set; }
         protected string ApiUrl { get; set; }
         protected OAuthInfo OAuthInfo { get; set; }
-
-        public RequestHelper requestHelper;
+        public RequestHelper requestHelper 
+        { 
+            get { return new RequestHelper(this.OAuthInfo); } 
+        }
 
         public ResourceGuruClient(string clientId, string clientSecret)
         {
             ClientId = clientId;
-            ClientSecret = clientSecret;
-            ApiUrl = "https://api.resourceguruapp.com/";
-            requestHelper = new RequestHelper(this.OAuthInfo);
-            
+            ClientSecret = clientSecret;      
         }
 
         public string GetAuthorizeUrl(string redirectUri)
@@ -81,17 +80,17 @@ namespace ResourceGuru
         #region Services
         public AccountService AccountService
         {
-            get { return new AccountService(this); }
+            get { return new AccountService(this.requestHelper); }
         }
 
         public BookingService BookingService
         {
-            get { return new BookingService(this); }
+            get { return new BookingService(this.requestHelper); }
         }
 
         public ClientService ClientService
         {
-            get { return new ClientService(this); }
+            get { return new ClientService(this.requestHelper); }
         }
         #endregion
     }

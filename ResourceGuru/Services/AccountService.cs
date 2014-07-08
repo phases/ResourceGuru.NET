@@ -1,4 +1,5 @@
 ﻿using ResourceGuru.Models;
+using ResourceGuru.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +10,10 @@ namespace ResourceGuru.Services
 {
     public class AccountService
     {
-        protected ResourceGuruClient _client;
-        public AccountService(ResourceGuruClient client)
+        protected RequestHelper _requestHelper;
+        public AccountService(RequestHelper requestHelper)
         {
-            _client = client;
+            _requestHelper = requestHelper;
         }
 
         /// <summary>
@@ -22,7 +23,7 @@ namespace ResourceGuru.Services
         public List<Account> GetAllAccounts()
         {
             string url = "/v1/accounts";
-            return _client.requestHelper.Get<List<Account>>(url);
+            return _requestHelper.Get<List<Account>>(url);
         }
 
         /// <summary>
@@ -33,7 +34,7 @@ namespace ResourceGuru.Services
         public AccountDetail GetAccount(int id)
         {
             string url = string.Format("/v1/accounts/{0}", id);
-            return _client.requestHelper.Get<AccountDetail>(url);
+            return _requestHelper.Get<AccountDetail>(url);
         }
     }
 }

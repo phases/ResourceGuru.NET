@@ -16,11 +16,15 @@ namespace TestSpace.Controllers
             //var redirectUri = client.GetAuthorizeUrl("localhost:300");
            // Response.Redirect(redirectUri);
 
-            client.AuthenticateWithAuthorizationCode("a43163c09bfbefca6169e9757a71d049be99f4ee23e1d978e5a0a718643d8516","https://localhost");
+            //client.AuthenticateWithAuthorizationCode("a43163c09bfbefca6169e9757a71d049be99f4ee23e1d978e5a0a718643d8516","https://localhost");
+            client.AuthenticateWithPassword("avh@phases.dk", "PhasesRocks123");
 
-            List<Booking> bookings = client.BookingService.GetBookings(subdomain: "my-org");
-            ClientDetail clientDetails = client.ClientService.GetClient(subdomain: "my-org", clientId: 123);
-            string clientName = clientDetails.Name;
+            List<Booking> bookings = client.BookingService.GetBookings(subdomain: "phases3");
+            var clients = client.ClientService.GetClients("phases3");
+
+            var n = clients.First().Name;
+            //ClientDetail clientDetails = client.ClientService.GetClient(subdomain: "my-org", clientId: 123);
+            //string clientName = clientDetails.Name;
             return View();
         }
 

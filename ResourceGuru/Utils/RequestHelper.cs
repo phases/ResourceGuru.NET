@@ -48,7 +48,7 @@ namespace ResourceGuru.Utils
             var data = new List<string>();
             string httpMethod = string.Empty;
             string originalUrl = url;
-            url = "https://api.resourceguruapp.com/" + url;
+            url = "https://api.resourceguruapp.com" + url;
             //To use url other than api.podio.com, ex file download from files.podio.com
             if (options != null && options.ContainsKey("url"))
             {
@@ -99,7 +99,7 @@ namespace ResourceGuru.Utils
 
             if (_OAuthInfo != null && !string.IsNullOrEmpty(_OAuthInfo.access_token))
             {
-                requestHeaders["Authorization"] = "OAuth2 " + _OAuthInfo.access_token;
+                requestHeaders["Authorization"] = "Bearer " + _OAuthInfo.access_token;
                 if (options != null && options.ContainsKey("oauth_request") && options["oauth_request"])
                 {
                     requestHeaders.Remove("Authorization");
@@ -132,7 +132,7 @@ namespace ResourceGuru.Utils
                 if (requestHeaders.ContainsKey("Content-type"))
                     request.ContentType = requestHeaders["Content-type"];
                 if (requestHeaders.ContainsKey("Content-length"))
-                    request.ContentType = requestHeaders["Content-length"];
+                    request.ContentLength = int.Parse(requestHeaders["Content-length"]);
                 if (requestHeaders.ContainsKey("Authorization"))
                     request.Headers.Add("Authorization", requestHeaders["Authorization"]);
             }
