@@ -37,7 +37,7 @@ This method is only recommended for private apps, such as data imports and expor
 client.AuthenticateWithPassword(username, password);
 ```
 
-Basic Usage
+Example usage
 -----------
 
 After authentication you can use all of the wrapper functions to make API requests. The functions are organized into services. You can access this service classes form the ResourceGuruClient instance.

@@ -21,6 +21,7 @@ namespace TestSpace.Controllers
 
             List<Booking> bookings = client.BookingService.GetBookings(subdomain: "phases3");
             var clients = client.ClientService.GetClients("phases3");
+            var clientDetail = client.ClientService.GetClient("phases3", 38245);
 
             var n = clients.First().Name;
             //ClientDetail clientDetails = client.ClientService.GetClient(subdomain: "my-org", clientId: 123);
