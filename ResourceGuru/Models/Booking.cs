@@ -13,13 +13,13 @@ namespace ResourceGuru.Models
         public int Id { get; set; }
 
         [JsonProperty("client_id")]
-        public object ClientId { get; set; }
+        public int? ClientId { get; set; }
 
         [JsonProperty("project_id")]
-        public int ProjectId { get; set; }
+        public int? ProjectId { get; set; }
 
         [JsonProperty("resource_id")]
-        public int ResourceId { get; set; }
+        public int? ResourceId { get; set; }
 
         [JsonProperty("notes")]
         public string Notes { get; set; }
@@ -34,7 +34,7 @@ namespace ResourceGuru.Models
         public string EndDate { get; set; }
 
         [JsonProperty("refreshable")]
-        public bool Refreshable { get; set; }
+        public bool? Refreshable { get; set; }
 
         [JsonProperty("created_at")]
         public string CreatedAt { get; set; }
@@ -69,19 +69,19 @@ namespace ResourceGuru.Models
     {
 
         [JsonProperty("date")]
-        public DateTime Date { get; set; }
+        public DateTime? Date { get; set; }
 
         [JsonProperty("duration")]
-        public int Duration { get; set; }
+        public int? Duration { get; set; }
 
         [JsonProperty("end_time")]
-        public int EndTime { get; set; }
+        public int? EndTime { get; set; }
 
         [JsonProperty("start_time")]
-        public int StartTime { get; set; }
+        public int? StartTime { get; set; }
 
         [JsonProperty("waiting")]
-        public bool Waiting { get; set; }
+        public bool? Waiting { get; set; }
     }
 }
 
