@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 namespace ResourceGuru.Models
 {
-    class ResourceDetail
+    public class ResourceDetail
     {
         [JsonProperty("id")]
         public int Id { get; set; }

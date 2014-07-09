@@ -97,6 +97,11 @@ namespace ResourceGuru
         {
             get { return new ProjectService(this.requestHelper); }
         }
+
+        public ResourceService ResourceService
+        {
+            get { return new ResourceService(this.requestHelper); }
+        }
         #endregion
     }
 }
