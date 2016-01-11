@@ -11,11 +11,19 @@ namespace ResourceGuru.Exceptions
         public int Status { get; internal set; }
         public string Error { get; set; }
         public string ResponseBody { get; set; }
+        public int RetryAfter { get; set; }
         public ResourceGuruException(int status, string error, string responseBody)
         {
             this.Status = status;
             this.Error = error;
             this.ResponseBody = responseBody;
+        }
+        public ResourceGuruException(int status, string error, string responseBody, int retryAfter)
+        {
+            this.Status = status;
+            this.Error = error;
+            this.ResponseBody = responseBody;
+            this.RetryAfter = retryAfter;
         }
     }
 }

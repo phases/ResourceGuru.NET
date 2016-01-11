@@ -16,9 +16,9 @@ namespace ResourceGuru.Services
             _requestHelper = requestHelper;
         }
 
-        public List<Project>  GetProjects(string subdomain, int? limit = null, int? offset = null)
+        public List<Project> GetProjects(string subdomain, int? limit = 50, int? offset = 0)
         {
-            string url = string.Format("/v1/{0}/projects", subdomain);
+            string url = string.Format("/v1/{0}/projects?limit={1}&offset={2}", subdomain, limit, offset);
             return _requestHelper.Get<List<Project>>(url);
         }
 
@@ -34,27 +34,29 @@ namespace ResourceGuru.Services
             return _requestHelper.Get<ProjectDetail>(url);
         }
 
-        public Project AddNewProject(string subdomain, string color, string name, string notes)
+        public Project AddNewProject(string subdomain, string name, string notes, int? clientId = null, string color = null)
         {
             string url = string.Format("/v1/{0}/projects ", subdomain);
             var requestData = new
             {
                 color = color,
                 name = name,
-                notes = notes
+                notes = notes,
+                client_id = clientId != null?clientId.Value : 0
             };
 
             return _requestHelper.Post<Project>(url, requestData);
         }
 
-        public Project UpdateProject(string subdomain, int projectId, string color, string name, string notes)
+        public Project UpdateProject(string subdomain, int projectId, string name, string notes, int? clientId = null, string color = null)
         {
             string url = string.Format("/v1/{0}/projects/{1}", subdomain, projectId);
             var requestData = new
             {
                 color = color,
                 name = name,
-                notes = notes
+                notes = notes,
+                client_id = clientId != null ? clientId.Value : 0
             };
 
             return _requestHelper.Put<Project>(url, requestData);

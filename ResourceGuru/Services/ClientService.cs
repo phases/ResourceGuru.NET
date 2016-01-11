@@ -16,9 +16,9 @@ namespace ResourceGuru.Services
             _requestHelper = requestHelper;
         }
 
-        public List<Client> GetClients(string subdomain, int? limit = null, int? offset = null)
+        public List<Client> GetClients(string subdomain, int? limit = 50, int? offset = 0)
         {
-            string url = string.Format("/v1/{0}/clients", subdomain);
+            string url = string.Format("/v1/{0}/clients?limit={1}&offset={2}", subdomain,limit,offset);
             return _requestHelper.Get<List<Client>>(url);
         }
 
@@ -34,7 +34,7 @@ namespace ResourceGuru.Services
             return _requestHelper.Get<ClientDetail>(url);
         }
 
-        public Client AddNewClient(string subdomain, string color, string name, string notes)
+        public Client AddNewClient(string subdomain, string name, string notes, string color = null)
         {
             string url = string.Format("/v1/{0}/clients", subdomain);
             var requestData = new
@@ -47,7 +47,7 @@ namespace ResourceGuru.Services
             return _requestHelper.Post<Client>(url, requestData);
         }
 
-        public Client UpdateClient(string subdomain, int clientId, string color, string name, string notes)
+        public Client UpdateClient(string subdomain, int clientId, string name, string notes, string color = null)
         {
             string url = string.Format("/v1/{0}/clients/{1}", subdomain, clientId);
             var requestData = new

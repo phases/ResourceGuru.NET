@@ -16,9 +16,9 @@ namespace ResourceGuru.Services
             _requestHelper = requestHelper;
         }
 
-        public List<Resource> GetResources(string subdomain, int? limit = null, int? offset = null)
+        public List<Resource> GetResources(string subdomain, int? limit = 50, int? offset = 0)
         {
-            string url = string.Format("/v1/{0}/resources", subdomain);
+            string url = string.Format("/v1/{0}/resources?limit={1}&offset={2}", subdomain, limit, offset);
             return _requestHelper.Get<List<Resource>>(url);
         }
 
@@ -40,9 +40,9 @@ namespace ResourceGuru.Services
             return _requestHelper.Post<Resource>(url, resourceRequest);
         }
 
-        public Resource UpdateResource(string subdomain, ResourceRequest resourceRequest)
+        public Resource UpdateResource(string subdomain, int resourceId, ResourceRequest resourceRequest)
         {
-            string url = string.Format("/v1/{0}/resources", subdomain);
+            string url = string.Format("/v1/{0}/resources/{1}", subdomain, resourceId);
             return _requestHelper.Put<Resource>(url, resourceRequest);
         }
 

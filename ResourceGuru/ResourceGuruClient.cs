@@ -3,10 +3,9 @@ using ResourceGuru.Services;
 using ResourceGuru.Utils;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web;
+using ResourceGuru.Utils.Authentication;
+using System.Net;
 
 namespace ResourceGuru
 {
@@ -15,16 +14,27 @@ namespace ResourceGuru
         protected string ClientId { get; set; }
         protected string ClientSecret { get; set; }
         protected string ApiUrl { get; set; }
-        protected OAuthInfo OAuthInfo { get; set; }
-        public RequestHelper requestHelper 
+        public OAuthInfo OAuthInfo { get; set; }
+
+        public WebProxy Proxy { get; set; }
+
+        public IAuthStore AuthStore { get; set; }
+        private RequestHelper requestHelper 
         { 
-            get { return new RequestHelper(this.OAuthInfo); } 
+            get { return new RequestHelper(this.OAuthInfo,this,this.Proxy); } 
         }
 
-        public ResourceGuruClient(string clientId, string clientSecret)
+        public ResourceGuruClient(string clientId, string clientSecret, IAuthStore authStore = null, WebProxy proxy = null)
         {
+            Proxy = proxy;
             ClientId = clientId;
-            ClientSecret = clientSecret;      
+            ClientSecret = clientSecret;
+            if (authStore != null)
+                AuthStore = authStore;
+            else
+                AuthStore = new NullAuthStore();
+
+            OAuthInfo = AuthStore.Get();
         }
 
         public string GetAuthorizeUrl(string redirectUri)
@@ -53,8 +63,9 @@ namespace ResourceGuru
             return Authenticate("password", authRequest);
         }
 
-        public OAuthInfo RefreshAccessToken()
+        public OAuthInfo RefreshAccessToken(OAuthInfo authinfo)
         {
+            this.OAuthInfo = authinfo;
             var authRequest = new Dictionary<string, string>(){
                    {"refresh_token", OAuthInfo.refresh_token},
                    {"grant_type", "refresh_token"}
@@ -62,17 +73,28 @@ namespace ResourceGuru
             return Authenticate("refresh_token", authRequest);
         }
 
+        /// <summary>
+        /// Check if there is a stored access token already present.
+        /// </summary>
+        /// <returns></returns>
+        public bool IsAuthenticated()
+        {
+            return (this.OAuthInfo != null && !string.IsNullOrEmpty(this.OAuthInfo.access_token));
+        }
+
         private OAuthInfo Authenticate(string grantType, Dictionary<string, string> attributes)
         {
             attributes["client_id"] = ClientId;
             attributes["client_secret"] = ClientSecret;
+            Dictionary<string, object> options = null;
 
-            var options = new Dictionary<string, object>(){
+            options = new Dictionary<string, object>(){
                 {"oauth_request",true}
-            };
+                };
 
             OAuthInfo OAuthInfo = requestHelper.Post<OAuthInfo>("/oauth/token", attributes, options);
             this.OAuthInfo = OAuthInfo;
+            AuthStore.Set(OAuthInfo);
 
             return OAuthInfo;
         }
@@ -101,6 +123,19 @@ namespace ResourceGuru
         public ResourceService ResourceService
         {
             get { return new ResourceService(this.requestHelper); }
+        }
+        public UserService UserService
+        {
+            get { return new UserService(this.requestHelper); }
+        }
+        public ResourceTypeService ResourceTypeService
+        {
+            get { return new ResourceTypeService(this.requestHelper); }
+        }
+
+        public HookService HookService
+        {
+            get { return new HookService(this.requestHelper); }
         }
         #endregion
     }

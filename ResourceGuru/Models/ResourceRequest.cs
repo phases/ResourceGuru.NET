@@ -36,7 +36,13 @@ namespace ResourceGuru.Models
         /// Meeting rooms only
         /// </summary>
         [JsonProperty("capacity")]
-        public int Capacity { get; set; }
+        public int? Capacity { get; set; }
+
+        // <summary>
+        /// Vehicle only
+        /// </summary>
+        [JsonProperty("registration_number")]
+        public string RegistrationNumber { get; set; }
 
         // Other parameters
         [JsonProperty("resource_type_id")]

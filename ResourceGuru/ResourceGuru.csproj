@@ -63,13 +63,20 @@
     <Compile Include="Models\ResourceType.cs" />
     <Compile Include="Models\ResourceTypeDetail.cs" />
     <Compile Include="Models\Timezone.cs" />
+    <Compile Include="Models\Users.cs" />
+    <Compile Include="Models\Webhook.cs" />
     <Compile Include="ResourceGuruClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AccountService.cs" />
     <Compile Include="Services\BookingService.cs" />
     <Compile Include="Services\ClientService.cs" />
+    <Compile Include="Services\HookService.cs" />
     <Compile Include="Services\ProjectService.cs" />
     <Compile Include="Services\ResourceService.cs" />
+    <Compile Include="Services\ResourceTypeService.cs" />
+    <Compile Include="Services\UserService.cs" />
+    <Compile Include="Utils\Authentication\IAuthStore.cs" />
+    <Compile Include="Utils\Authentication\NullAuthStore.cs" />
     <Compile Include="Utils\RequestHelper.cs" />
     <Compile Include="Utils\Utilities.cs" />
   </ItemGroup>

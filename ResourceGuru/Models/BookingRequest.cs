@@ -14,6 +14,9 @@ namespace ResourceGuru.Models
         [JsonProperty("duration")]
         public int? Duration { get; set; }
 
+        [JsonProperty("start_time")]
+        public int? StartTime { get; set; }
+
         [JsonProperty("resource_id")]
         public int ResourceId { get; set; }
 

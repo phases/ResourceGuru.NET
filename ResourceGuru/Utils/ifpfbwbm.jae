@@ -17,12 +17,11 @@ namespace ResourceGuru.Utils
     {
         private OAuthInfo _OAuthInfo;
         private ResourceGuruClient _ResourceGuruClient;
-        private WebProxy _Proxy { get; set; }
-        public RequestHelper(OAuthInfo OAuthInfo,ResourceGuruClient resourceGuruClient, WebProxy proxy)
+
+        public RequestHelper(OAuthInfo OAuthInfo,ResourceGuruClient resourceGuruClient)
         {
             _OAuthInfo = OAuthInfo;
             _ResourceGuruClient = resourceGuruClient;
-            _Proxy = proxy;
         }
 
         internal T Get<T>(string url, Dictionary<string, string> requestData = null, dynamic options = null) where T : new()
@@ -102,18 +101,6 @@ namespace ResourceGuru.Utils
 
             if (_OAuthInfo != null && !string.IsNullOrEmpty(_OAuthInfo.access_token))
             {
-                if(!string.IsNullOrEmpty(_OAuthInfo.expires_in))
-                {
-                    if (options == null || (options != null && !options.ContainsKey("oauth_request") && !options["oauth_request"]))
-                    {
-                        if (DateTime.Parse(_OAuthInfo.expires_in).AddDays(6) < DateTime.Now)
-                        {
-                            _OAuthInfo = _ResourceGuruClient.RefreshAccessToken(_OAuthInfo);
-                            _OAuthInfo.expires_in = DateTime.Now.ToString();
-                            _ResourceGuruClient.OAuthInfo = _OAuthInfo;
-                        }
-                    }
-                }
                 requestHeaders["Authorization"] = "Bearer " + _OAuthInfo.access_token;
                 if (options != null && options.ContainsKey("oauth_request") && options["oauth_request"])
                 {
@@ -132,7 +119,7 @@ namespace ResourceGuru.Utils
 
             var request = (HttpWebRequest)WebRequest.Create(url);
             ServicePointManager.Expect100Continue = false;
-            request.Proxy = this._Proxy;
+            request.Proxy = null;
             request.Method = httpMethod;
             request.UserAgent = "ResourceGuru Dotnet Client";
 
@@ -164,11 +151,9 @@ namespace ResourceGuru.Utils
 
             try
             {
-                using (
-                    WebResponse response = request.GetResponse())
+                using (WebResponse response = request.GetResponse())
                 {
                     apiResponse.Status = (int)((HttpWebResponse)response).StatusCode;
-
                     foreach (string key in response.Headers.AllKeys)
                     {
                         responseHeaders.Add(key, response.Headers.Get(key));
@@ -215,28 +200,19 @@ namespace ResourceGuru.Utils
                     responseObject = default(T);
                     break;
                 case 401:
-                    //if (!string.IsNullOrEmpty(_OAuthInfo.refresh_token))
-                    //{
-                    //    //Refresh access token
-                    //    var authInfo = _ResourceGuruClient.RefreshAccessToken(_OAuthInfo);
-                    //    if (authInfo != null && !string.IsNullOrEmpty(authInfo.access_token))
-                    //        responseObject = Request<T>(requestMethod, originalUrl, requestData, options);
-                    //}
-                    //else
-                    //{
-                        
-                    //}
-                    throw new ResourceGuruException(apiResponse.Status, "Unauthorized", apiResponse.Body);
+                    if (!string.IsNullOrEmpty(_OAuthInfo.refresh_token))
+                    {
+                        //Refresh access token
+                        var authInfo = _ResourceGuruClient.RefreshAccessToken();
+                        if (authInfo != null && !string.IsNullOrEmpty(authInfo.access_token))
+                            responseObject = Request<T>(requestMethod, originalUrl, requestData, options);
+                    }
+                    else
+                    {
+                        throw new ResourceGuruException(apiResponse.Status, "Unauthorized", apiResponse.Body);
+                    }
                     break;
                 case 403:
-                    if (apiResponse.Headers.ContainsKey("Retry-After"))
-                    {
-                        int retryAfter = 0;
-                        int.TryParse(apiResponse.Headers["Retry-After"], out retryAfter);
-                        //   RateLimitRemaining = int.Parse(apiResponse.Headers["Retry-After"]);
-                        throw new ResourceGuruException(apiResponse.Status, "RateLimitExceed", apiResponse.Body, retryAfter);
-                    }
-
                     throw new ResourceGuruException(apiResponse.Status, "Forbidden", apiResponse.Body);
                 case 404:
                     throw new ResourceGuruException(apiResponse.Status, "Not Found", apiResponse.Body);

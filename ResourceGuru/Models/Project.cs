@@ -28,6 +28,9 @@ namespace ResourceGuru.Models
         public int AccountId { get; set; }
 
         [JsonProperty("client_id")]
-        public int ClientId { get; set; }
+        public int? ClientId { get; set; }
+
+        [JsonProperty("notes")]
+        public string Notes { get; set; }
     }
 }

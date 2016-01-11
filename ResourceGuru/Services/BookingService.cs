@@ -16,9 +16,9 @@ namespace ResourceGuru.Services
             _requestHelper = requestHelper;
         }
 
-        public List<Booking> GetBookings(string subdomain, DateTime? startDate = null, DateTime? endDate = null, int? limit = null, int? offset = null, int? bookerId = null)
+        public List<Booking> GetBookings(string subdomain, DateTime? startDate = null, DateTime? endDate = null, int? limit = 50, int? offset = 0, int? bookerId = null)
         {
-            string url = string.Format("/v1/{0}/bookings", subdomain);
+            string url = string.Format("/v1/{0}/bookings?start_date={1}&end_date={2}&limit={3}&offset={4}&booker_id={5}", subdomain, startDate, endDate, limit, offset, bookerId);
             var requestData = new Dictionary<string, string>
             {
                 {"start_date", Utilities.FormatDateForRequest(startDate)},

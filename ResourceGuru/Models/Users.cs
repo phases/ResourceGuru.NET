@@ -1,8 +1,13 @@
 ﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace ResourceGuru.Models
 {
-    public class CurrentUser
+    public class Users
     {
         [JsonProperty("id")]
         public int Id { get; set; }
@@ -18,5 +23,8 @@ namespace ResourceGuru.Models
 
         [JsonProperty("image")]
         public string Image { get; set; }
+
+        [JsonProperty("permissions")]
+        public string Permissions { get; set; }
     }
 }

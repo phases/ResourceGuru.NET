@@ -54,6 +54,9 @@ namespace ResourceGuru.Models
         [JsonProperty("selected_custom_field_options")]
         public List<CustomFieldOption> SelectedCustomFieldOptions { get; set; }
 
+        [JsonProperty("custom_attributes")]
+        public CustomAttributes CustomAttributes { get; set; }
+
         [JsonProperty("timezone")]
         public Timezone Timezone { get; set; }
     }
@@ -75,6 +78,15 @@ namespace ResourceGuru.Models
 
         [JsonProperty("valid_until")]
         public DateTime? ValidUntil { get; set; }
+    }
+
+    public class CustomAttributes
+    {
+        [JsonProperty("capacity")]
+        public int? Capacity { get; set; }
+
+        [JsonProperty("registration_number")]
+        public string RegistrationNumber { get; set; }
     }
 
     public class CustomFieldOption
