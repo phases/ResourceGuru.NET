@@ -124,6 +124,12 @@ namespace ResourceGuru
         {
             get { return new ResourceService(this.requestHelper); }
         }
+
+        public TimeOffService TimeOffService
+        {
+            get { return new TimeOffService(this.requestHelper); }
+        }
+
         public UserService UserService
         {
             get { return new UserService(this.requestHelper); }

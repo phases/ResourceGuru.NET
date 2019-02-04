@@ -18,7 +18,7 @@ namespace ResourceGuru.Utils
         private OAuthInfo _OAuthInfo;
         private ResourceGuruClient _ResourceGuruClient;
         private WebProxy _Proxy { get; set; }
-        public RequestHelper(OAuthInfo OAuthInfo,ResourceGuruClient resourceGuruClient, WebProxy proxy)
+        public RequestHelper(OAuthInfo OAuthInfo, ResourceGuruClient resourceGuruClient, WebProxy proxy)
         {
             _OAuthInfo = OAuthInfo;
             _ResourceGuruClient = resourceGuruClient;
@@ -102,11 +102,12 @@ namespace ResourceGuru.Utils
 
             if (_OAuthInfo != null && !string.IsNullOrEmpty(_OAuthInfo.access_token))
             {
-                if(!string.IsNullOrEmpty(_OAuthInfo.expires_in))
+                if (!string.IsNullOrEmpty(_OAuthInfo.expires_in))
                 {
                     if (options == null || (options != null && !options.ContainsKey("oauth_request") && !options["oauth_request"]))
                     {
-                        if (DateTime.Parse(_OAuthInfo.expires_in).AddDays(6) < DateTime.Now)
+                        var dtToCheck = Convert.ToDateTime(String.Format("{0:d/M/yyyy HH:mm:ss}", new System.DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(604800))).AddDays(6);
+                        if (dtToCheck < DateTime.Now)
                         {
                             _OAuthInfo = _ResourceGuruClient.RefreshAccessToken(_OAuthInfo);
                             _OAuthInfo.expires_in = DateTime.Now.ToString();
@@ -132,6 +133,7 @@ namespace ResourceGuru.Utils
 
             var request = (HttpWebRequest)WebRequest.Create(url);
             ServicePointManager.Expect100Continue = false;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11;
             request.Proxy = this._Proxy;
             request.Method = httpMethod;
             request.UserAgent = "ResourceGuru Dotnet Client";
@@ -173,7 +175,7 @@ namespace ResourceGuru.Utils
                     {
                         responseHeaders.Add(key, response.Headers.Get(key));
                     }
-                   
+
                     using (StreamReader sr = new StreamReader(response.GetResponseStream()))
                     {
                         apiResponse.Body = sr.ReadToEnd();
@@ -201,8 +203,8 @@ namespace ResourceGuru.Utils
 
 
             //if (apiResponse.Headers.ContainsKey("Retry-After"))
-             //   RateLimitRemaining = int.Parse(apiResponse.Headers["Retry-After"]);
-           
+            //   RateLimitRemaining = int.Parse(apiResponse.Headers["Retry-After"]);
+
 
 
             switch (apiResponse.Status)
@@ -224,7 +226,7 @@ namespace ResourceGuru.Utils
                     //}
                     //else
                     //{
-                        
+
                     //}
                     throw new ResourceGuruException(apiResponse.Status, "Unauthorized", apiResponse.Body);
                     break;
