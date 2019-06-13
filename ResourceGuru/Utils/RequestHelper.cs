@@ -106,7 +106,17 @@ namespace ResourceGuru.Utils
                 {
                     if (options == null || (options != null && !options.ContainsKey("oauth_request") && !options["oauth_request"]))
                     {
-                        var dtToCheck = Convert.ToDateTime(String.Format("{0:d/M/yyyy HH:mm:ss}", new System.DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(604800))).AddDays(6);
+                        int expirationStamp;
+                        var dtToCheck = new DateTime();
+                        if (Int32.TryParse(_OAuthInfo.expires_in, out expirationStamp))
+                        {
+                            dtToCheck = Convert.ToDateTime(String.Format("{0:d/M/yyyy HH:mm:ss}", new System.DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(expirationStamp))).AddDays(6);
+                        }
+                        else
+                        {
+                            dtToCheck = Convert.ToDateTime(_OAuthInfo.expires_in);
+                        }
+
                         if (dtToCheck < DateTime.Now)
                         {
                             _OAuthInfo = _ResourceGuruClient.RefreshAccessToken(_OAuthInfo);
