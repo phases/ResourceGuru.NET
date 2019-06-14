@@ -2,6 +2,7 @@
 using ResourceGuru.Utils;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,13 +17,16 @@ namespace ResourceGuru.Services
             _requestHelper = requestHelper;
         }
 
-        public List<Booking> GetBookings(string subdomain, DateTime? startDate = null, DateTime? endDate = null, int? limit = 50, int? offset = 0, int? bookerId = null)
+        public List<Booking> GetBookings(string subdomain, DateTime? startDate = null, DateTime? endDate = null, int? limit = null, int? offset = 0, int? bookerId = null)
         {
-            string url = string.Format("/v1/{0}/bookings?start_date={1}&end_date={2}&limit={3}&offset={4}&booker_id={5}", subdomain, startDate, endDate, limit, offset, bookerId);
+            var startDateString = Utilities.FormatDateForRequest(startDate);
+            var endDateString = Utilities.FormatDateForRequest(endDate);
+
+             string url = string.Format("/v1/{0}/bookings", subdomain);
             var requestData = new Dictionary<string, string>
             {
-                {"start_date", Utilities.FormatDateForRequest(startDate)},
-                {"end_date", Utilities.FormatDateForRequest(endDate)},
+                {"start_date", startDateString},
+                {"end_date", endDateString},
                 {"limit", limit.ToString()},
                 {"offset", offset.ToString()},
                 {"booker_id", bookerId.ToString()}

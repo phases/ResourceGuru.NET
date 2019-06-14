@@ -16,7 +16,7 @@ namespace ResourceGuru.Services
             _requestHelper = requestHelper;
         }
 
-        public List<Client> GetClients(string subdomain, int? limit = 50, int? offset = 0)
+        public List<Client> GetClients(string subdomain, int? limit = null, int? offset = 0)
         {
             string url = string.Format("/v1/{0}/clients?limit={1}&offset={2}", subdomain,limit,offset);
             return _requestHelper.Get<List<Client>>(url);
